@@ -2,6 +2,7 @@ import pathlib
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import statisticalAnalysis
 
 
 def get_green_channel(img):
@@ -93,19 +94,56 @@ def image_processing(img):
 
 
 def get_images():
-    image_list = list()
+    # image_list = list()
+    # folder_path = 'resources/pictures/'
+    # subfolders = ['chasedb1/base', 'chasedb1/correct']#hrf/base']
+    # for subfolder in subfolders:
+    #     for file in pathlib.Path(folder_path + subfolder).iterdir():
+    #         img = cv2.imread(str(file))
+    #         image_list.append(img)
+    # #return image_list
+
     folder_path = 'resources/pictures/'
-    subfolders = ['chasedb1/', 'hrf/']
-    for subfolder in subfolders:
-        for file in pathlib.Path(folder_path + subfolder).iterdir():
-            img = cv2.imread(str(file))
-            image_list.append(img)
-    return image_list
+
+    base_images = list()
+    for file in pathlib.Path(folder_path + 'hrf/base').iterdir():
+        img = cv2.imread(str(file))
+        base_images.append(img)
+
+    correct_images = list()
+    for file in pathlib.Path(folder_path + 'hrf/correct').iterdir():
+        img = cv2.imread(str(file))
+        correct_images.append(img)
+
+    return base_images, correct_images
 
 
 def main():
-    plt.imshow(image_processing(get_images()[0]), cmap='gray')
-    plt.show()
+    base_images, correct_images = get_images()
+    for i in range(len(base_images)):
+        original_img = base_images[i][:]
+        processed_img = image_processing(base_images[i][:])
+        correct_img = correct_images[i][:, :, 2][:]
+
+        fig = plt.figure(figsize=(16, 24))
+
+        fig.add_subplot(1, 3, 1)
+        plt.imshow(original_img[:, :, ::-1])
+        plt.axis('off')
+
+        fig.add_subplot(1, 3, 2)
+        plt.imshow(processed_img, cmap='gray')
+        plt.axis('off')
+
+        fig.add_subplot(1, 3, 3)
+        plt.imshow(correct_img, cmap='gray')
+        plt.axis('off')
+
+        plt.show()
+
+        print(statisticalAnalysis.confusion_matrix_data(correct_img, processed_img))
+
+        break  # only first picture
 
 
 if __name__ == "__main__":

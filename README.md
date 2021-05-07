@@ -39,7 +39,17 @@ Retinal image (.png) and it`s binary mask (.png), the closer 1024x1024 the bette
 ![Input-mask](./resources/screenshots/input-mask.png)
 
 ## Output
+U-Net results:
+
+[input-img | output | input-mask]
+
+![Output-UNet](./resources/screenshots/output_unet.png)
+
 Image processing result:
 
 [input-img | output | input-mask]
-![Output](./resources/screenshots/output.png)
+
+![Output-imageProcessing](./resources/screenshots/output_imageProcessing.png)
+
+
+

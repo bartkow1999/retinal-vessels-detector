@@ -2,7 +2,8 @@ from sklearn.metrics import confusion_matrix
 import math
 
 
-def confusion_matrix_data(img_true, img_predicted):
+def confusion_matrix_data(label, img_true, img_predicted):
+    print('\n' + label)
     print('img true shape: ' + str(img_true.shape))
     print('img predicted shape: ' + str(img_predicted.shape))
     TN, FP, FN, TP = confusion_matrix(img_true.flatten(), img_predicted.flatten()).ravel()

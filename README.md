@@ -12,8 +12,8 @@ This application uses deep neural network and image processing to detect blood v
 U-Net is a convolutional neural network that was developed for biomedical image segmentation. 
 
 Results on validation set:
-val_loss: 0.1000
-val_accuracy: **0.9635**
+* val_loss: 0.1000
+* val_accuracy: **0.9635**
 
 The project was made in **April 2021**.
 
@@ -34,10 +34,12 @@ Image processing is located in ```imageProcessing.py``` and deep neural network 
 
 ## Input 
 Retinal image (.png) and it`s binary mask (.png), the closer 1024x1024 the better. For example:
+
 ![Input-img](./resources/screenshots/input-img.png)
 ![Input-mask](./resources/screenshots/input-mask.png)
 
 ## Output
 Image processing result:
+
 [input-img | output | input-mask]
 ![Output](./resources/screenshots/output.png)

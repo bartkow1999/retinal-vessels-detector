@@ -1,0 +1,70 @@
+(5, 1024, 1024, 3)
+(5, 1024, 1024, 1)
+(5, 1024, 1024, 1)
+
+IMG: 0
+
+img true shape: (1024, 1024)
+img predicted shape: (1024, 1024, 1)
+TN: 930556
+FP: 35630
+FN: 13981
+TP: 68409
+accuracy: 0.9526872634887695
+sensitivity: 0.8303070761014686
+specificity: 0.9631230425611632
+geometric mean: 0.8942526921373566
+
+IMG: 1
+
+img true shape: (1024, 1024)
+img predicted shape: (1024, 1024, 1)
+TN: 961033
+FP: 17444
+FN: 13128
+TP: 56971
+accuracy: 0.9708442687988281
+sensitivity: 0.8127220074466113
+specificity: 0.9821722942900037
+geometric mean: 0.8934388835694447
+
+IMG: 2
+
+img true shape: (1024, 1024)
+img predicted shape: (1024, 1024, 1)
+TN: 921291
+FP: 31944
+FN: 12027
+TP: 83314
+accuracy: 0.9580659866333008
+sensitivity: 0.8738528020473878
+specificity: 0.9664888511227556
+geometric mean: 0.9190043474876387
+
+IMG: 3
+
+img true shape: (1024, 1024)
+img predicted shape: (1024, 1024, 1)
+TN: 951622
+FP: 17981
+FN: 18562
+TP: 60411
+accuracy: 0.9651498794555664
+sensitivity: 0.764957643751662
+specificity: 0.9814552966523412
+geometric mean: 0.866470848427553
+
+IMG: 4
+
+img true shape: (1024, 1024)
+img predicted shape: (1024, 1024, 1)
+TN: 950087
+FP: 24795
+FN: 12784
+TP: 60910
+accuracy: 0.9641618728637695
+sensitivity: 0.8265259044155562
+specificity: 0.974566152621548
+geometric mean: 0.897498841619483
+
+Process finished with exit code 0

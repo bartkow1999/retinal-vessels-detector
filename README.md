@@ -24,7 +24,7 @@ The project was made in **April 2021**.
 * opencv
 
 ## Setup
-It`s preferred to open in PyCharm 
+It`s preferred to open in PyCharm. 
 
 Clone this repository using git bash:
 ```
@@ -35,8 +35,7 @@ Image processing is located in ```imageProcessing.py``` and deep neural network 
 ## Input 
 Retinal image (.png) and it`s binary mask (.png), the closer 1024x1024 the better. For example:
 
-![Input-img](./resources/screenshots/input-img.png)
-![Input-mask](./resources/screenshots/input-mask.png)
+![Input](./resources/screenshots/input.png)
 
 ## Output
 U-Net results:

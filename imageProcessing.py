@@ -1,81 +1,30 @@
 import pathlib
+import os
+from errno import EEXIST
+
 import cv2
 import matplotlib.pyplot as plt
-import numpy as np
+
+from imageProcessingFunctions import get_green_channel, make_normalizer, normalize_histogram, get_kernels, \
+    morph_open_close, \
+    subtract, thresh, create_mask, make_contours, make_bitwise
 import statisticalAnalysis
 
 
-def get_green_channel(img):
-    return img[:, :, 1]
-
-
-def normalize_histogram(img, normalizer):
-    return normalizer.apply(img)
-
-
-def get_kernels():
-    kernel_sizes = [(5, 5), (7, 7), (15, 15), (21, 21)]
-    results = list()
-    for size in kernel_sizes:
-        results.append(cv2.getStructuringElement(cv2.MORPH_ELLIPSE, size))
-    return results
-
-
-def morph_open(img, kernels):
-    img = img.copy()
-    for kernel in kernels:
-        img = cv2.erode(img, kernel)
-        img = cv2.dilate(img, kernel)
-    return img
-
-
-def morph_close(img, kernels):
-    img = img.copy()
-    for kernel in kernels:
-        img = cv2.dilate(img, kernel)
-        img = cv2.erode(img, kernel)
-    return img
-
-
-def morph_open_close(img, kernels):
-    img = img.copy()
-    for kernel in kernels:
-        img = cv2.erode(img, kernel)
-        img = cv2.dilate(img, kernel)
-        img = cv2.dilate(img, kernel)
-        img = cv2.erode(img, kernel)
-        # img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
-        # img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-    return img
-
-
-def subtract(img1, img2):
-    return cv2.subtract(img1, img2)
-
-
-def thresh(img):
-    return cv2.threshold(img, 20, 255, cv2.THRESH_BINARY)[1]
-
-
-def create_mask(img):
-    return np.ones(img.shape[:2], dtype="uint8") * 255
-
-
-def make_contours(img, mask):
-    contours, hierarchy = cv2.findContours(img.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    for contour in contours:
-        if cv2.contourArea(contour) <= 200:
-            cv2.drawContours(mask, [contour], -1, 0, -1)
-
-
-def make_bitwise(img, noise_mask):
-    return cv2.bitwise_and(img, img, mask=noise_mask)
+def mkdir(mypath):
+    try:
+        os.makedirs(mypath)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == EEXIST and os.path.isdir(mypath):
+            pass
+        else:
+            raise
 
 
 def image_processing(img):
     img_green = get_green_channel(img)
 
-    normalizer = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    normalizer = make_normalizer()
     img_green_normalized = normalize_histogram(img_green, normalizer)
 
     kernels = get_kernels()
@@ -93,42 +42,20 @@ def image_processing(img):
     return result
 
 
-def get_images():
-    # image_list = list()
-    # folder_path = 'resources/pictures/'
-    # subfolders = ['chasedb1/base', 'chasedb1/correct']#hrf/base']
-    # for subfolder in subfolders:
-    #     for file in pathlib.Path(folder_path + subfolder).iterdir():
-    #         img = cv2.imread(str(file))
-    #         image_list.append(img)
-    # #return image_list
-
-    folder_path = 'resources/pictures/'
-
-    base_images = list()
-    for file in pathlib.Path(folder_path + 'hrf/base').iterdir():
+def get_pictures(path):
+    pictures = list()
+    for file in pathlib.Path(path).iterdir():
         img = cv2.imread(str(file))
-        base_images.append(img)
-
-    correct_images = list()
-    for file in pathlib.Path(folder_path + 'hrf/correct').iterdir():
-        img = cv2.imread(str(file))
-        correct_images.append(img)
-
-    return base_images, correct_images
+        pictures.append(img)
+    return pictures
 
 
-def main():
-    base_images, correct_images = get_images()
-    for i in range(len(base_images)):
-        original_img = base_images[i][:]
-        processed_img = image_processing(base_images[i][:])
-        correct_img = correct_images[i][:, :, 2][:]
-
-        fig = plt.figure(figsize=(16, 24))
+def superposition(img_list, masks_list, processed_img_list, iter_id):
+    for i, (img, mask, processed_img) in enumerate(zip(img_list, masks_list, processed_img_list)):
+        fig = plt.figure(figsize=(18, 8))
 
         fig.add_subplot(1, 3, 1)
-        plt.imshow(original_img[:, :, ::-1])
+        plt.imshow(img[:, :, ::-1])
         plt.axis('off')
 
         fig.add_subplot(1, 3, 2)
@@ -136,14 +63,32 @@ def main():
         plt.axis('off')
 
         fig.add_subplot(1, 3, 3)
-        plt.imshow(correct_img, cmap='gray')
+        plt.imshow(mask, cmap='gray')
         plt.axis('off')
 
-        plt.show()
+        statisticalAnalysis.confusion_matrix_data(f'IMG: {i}\n', img_true=mask[:, :, 0], img_predicted=processed_img)
 
-        print(statisticalAnalysis.confusion_matrix_data(correct_img, processed_img))
+        mkdir(f'resources/image-processing-results/try{iter_id}/')
+        try:
+            plt.savefig(f'resources/image-processing-results/try{iter_id}/{i}.png')
+        except:
+            continue
 
-        break  # only first picture
+
+def main():
+    iter_id = 2 # number of algorithm iteration
+    TEST_PATH = 'resources/test/'
+
+    img_list = get_pictures(TEST_PATH + 'images/')
+    masks_list = get_pictures(TEST_PATH + 'masks/')
+    processed_img_list = [image_processing(img) for img in img_list]
+
+    superposition(
+        img_list=img_list,
+        masks_list=masks_list,
+        processed_img_list=processed_img_list,
+        iter_id=iter_id
+    )
 
 
 if __name__ == "__main__":

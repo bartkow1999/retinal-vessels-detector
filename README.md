@@ -33,19 +33,21 @@ https://github.com/bartosztkowalski/retinal-vessels-detector.git
 Image processing is located in ```imageProcessing.py``` and deep neural network in ```UNetProcessing.py```. Execute these files to run algorithms.
 
 ## Input 
-Retinal image (.png) and it`s binary mask (.png), the closer 1024x1024 the better. For example:
+Retinal image (.png), the closer 1024x1024 the better. For example:
 
 ![Input](./resources/screenshots/input.png)
 
 ## Output
 U-Net results:
 
-[input-img | output | input-mask]
+Notation:
+[input-img | output | input-mask (for comparison, the ideal)]
 
 ![Output-UNet](./resources/screenshots/output_unet.png)
 
 Image processing result:
 
+Notation:
 [input-img | output | input-mask]
 
 ![Output-imageProcessing](./resources/screenshots/output_imageProcessing.png)
